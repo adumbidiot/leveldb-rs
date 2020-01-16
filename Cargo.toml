@@ -1,0 +1,11 @@
+[package]
+name = "leveldb"
+version = "0.0.1"
+authors = [ "adumbidiot <nathaniel.daniel23@outlook.com>" ]
+edition = "2018"
+
+[dependencies]
+leveldb-sys = { path = "lib/leveldb-sys" }
+
+[workspace]
+members = [ "lib/leveldb-sys" ]

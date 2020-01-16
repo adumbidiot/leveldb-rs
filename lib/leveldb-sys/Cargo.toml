@@ -1,0 +1,9 @@
+[package]
+name = "leveldb-sys"
+version = "0.0.1"
+authors = [ "adumbidiot <nathaniel.daniel23@outlook.com>" ]
+edition = "2018"
+
+[build-dependencies]
+cmake = "0.1.42"
+bindgen = "0.52.0"
