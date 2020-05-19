@@ -5,5 +5,5 @@ authors = [ "adumbidiot <nathaniel.daniel23@outlook.com>" ]
 edition = "2018"
 
 [build-dependencies]
-cmake = "0.1.42"
+cmake = "0.1.44"
 bindgen = "0.53.2"
