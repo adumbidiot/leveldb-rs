@@ -18,6 +18,12 @@ fn main() {
     let snappy_dir = build_snappy();
     let snappy_lib_dir = format!("{}/lib", snappy_dir.display());
 
+    #[cfg(target_os = "windows")]
+    let link_flag = "libpath";
+
+    #[cfg(not(target_os = "windows"))]
+    let link_flag = "L";
+
     let install_dir = cmake::Config::new("leveldb-1.22")
         .uses_cxx11()
         .define(
@@ -26,7 +32,7 @@ fn main() {
         )
         .define(
             "CMAKE_EXE_LINKER_FLAGS",
-            &format!("-libpath:{dir} -L{dir}", dir = snappy_lib_dir),
+            &format!("-{}:{}", link_flag, snappy_lib_dir),
         ) // Why is every build system a burning trashfire? Waiting for (https://github.com/google/leveldb/pull/686)
         .define("LEVELDB_BUILD_TESTS", "OFF")
         .define("LEVELDB_BUILD_BENCHMARKS", "OFF")
