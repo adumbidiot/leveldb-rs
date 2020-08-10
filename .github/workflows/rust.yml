@@ -37,8 +37,9 @@ jobs:
       - uses: actions/checkout@v1
       - uses: EmbarkStudios/cargo-deny-action@v1
   build:
-    runs-on: windows-latest # TODO: Fix build on ubuntu-latest and add to CI
+    runs-on: ubuntu-latest
     steps:
+      - run: sudo apt-get install clang 
       - uses: actions/checkout@v2
       - name: Build
         run: cargo build --verbose
