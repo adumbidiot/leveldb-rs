@@ -24,7 +24,10 @@ impl<'a> OwnedIterator<'a> {
         unsafe {
             let ptr = leveldb_iter_key(self.0, &mut len);
             if !ptr.is_null() {
-                Some(OwnedSlice::from_slice(std::slice::from_raw_parts(ptr, len)))
+                Some(OwnedSlice::from_slice(std::slice::from_raw_parts(
+                    ptr,
+                    len as usize,
+                )))
             } else {
                 None
             }
@@ -36,7 +39,10 @@ impl<'a> OwnedIterator<'a> {
         unsafe {
             let ptr = leveldb_iter_value(self.0, &mut len);
             if !ptr.is_null() {
-                Some(OwnedSlice::from_slice(std::slice::from_raw_parts(ptr, len)))
+                Some(OwnedSlice::from_slice(std::slice::from_raw_parts(
+                    ptr,
+                    len as usize,
+                )))
             } else {
                 None
             }
