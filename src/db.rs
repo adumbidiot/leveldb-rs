@@ -5,39 +5,71 @@ use crate::options::Options;
 use crate::options::ReadOptions;
 use crate::string::String as LevelDbString;
 use std::ffi::CString;
+use std::os::raw::c_char;
 
+/// A Leveldb Database
 #[derive(Debug)]
 pub struct Db {
     ptr: *mut leveldb_t,
 
-    _options: Options,
+    options: Options,
 }
 
 impl Db {
-    pub fn open<P: Into<Vec<u8>>>(path: P, _options: Options) -> Result<Self, LevelDbString> {
-        let path = CString::new(path).unwrap();
+    /// Open a leveldb database.
+    /// # Panics
+    /// Panics if there is an interior NUL in the path.
+    pub fn open(path: impl Into<Vec<u8>>, options: Options) -> Result<Self, LevelDbString> {
+        let path = CString::new(path).expect("No interior NULs in path parameter");
         let mut err_ptr = std::ptr::null_mut();
 
         let ptr = unsafe {
-            let ptr = leveldb_open(
-                _options.ptr(),
-                path.as_bytes().as_ptr() as *const i8,
-                &mut err_ptr,
-            );
-            if !err_ptr.is_null() {
-                return Err(LevelDbString::from_ptr(err_ptr));
+            let ptr = leveldb_open(options.as_raw(), path.as_ptr(), &mut err_ptr);
+            let err = LevelDbString::try_from_ptr(err_ptr);
+            if let Some(err) = err {
+                return Err(err);
             }
             ptr
         };
 
         assert!(!ptr.is_null());
 
-        Ok(Db { ptr, _options })
+        Ok(Db { ptr, options })
     }
 
+    /// Get a value with a key.
+    pub fn get(
+        &mut self,
+        options: &ReadOptions,
+        key: &[u8],
+    ) -> Result<Option<LevelDbString>, LevelDbString> {
+        let mut value_size = 0;
+        let mut err_ptr = std::ptr::null_mut();
+        let ptr = unsafe {
+            leveldb_get(
+                self.ptr,
+                options.as_raw(),
+                key.as_ptr() as *const c_char,
+                key.len(),
+                &mut value_size,
+                &mut err_ptr,
+            )
+        };
+
+        let value = unsafe { LevelDbString::try_from_ptr(ptr) };
+        let err = unsafe { LevelDbString::try_from_ptr(err_ptr) };
+
+        if let Some(err) = err {
+            return Err(err);
+        }
+
+        Ok(value)
+    }
+
+    /// Iter all db keys
     pub fn iter_owned(&mut self, options: &ReadOptions) -> OwnedIterator {
         unsafe {
-            let ptr = leveldb_create_iterator(self.ptr, options.ptr());
+            let ptr = leveldb_create_iterator(self.ptr, options.as_raw());
             OwnedIterator::from_parts(ptr, self)
         }
     }

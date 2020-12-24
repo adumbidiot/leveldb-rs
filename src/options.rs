@@ -1,16 +1,19 @@
 use leveldb_sys::*;
 
+/// Leveldb Open options
 #[derive(Debug)]
 pub struct Options(*mut leveldb_options_t);
 
 impl Options {
+    /// Make a new options object
     pub fn new() -> Self {
         let ptr = unsafe { leveldb_options_create() };
         assert!(!ptr.is_null());
         Self(ptr)
     }
 
-    pub fn ptr(&self) -> *const leveldb_options_t {
+    /// Get the inner pointer
+    pub fn as_raw(&self) -> *const leveldb_options_t {
         self.0
     }
 }
@@ -27,17 +30,20 @@ impl Default for Options {
     }
 }
 
+/// Options for reading keys
 #[derive(Debug)]
 pub struct ReadOptions(*mut leveldb_readoptions_t);
 
 impl ReadOptions {
+    /// Make a new ReadOptions object
     pub fn new() -> Self {
         let ptr = unsafe { leveldb_readoptions_create() };
         assert!(!ptr.is_null());
         Self(ptr)
     }
 
-    pub fn ptr(&self) -> *const leveldb_readoptions_t {
+    /// Get the inner pointer
+    pub fn as_raw(&self) -> *const leveldb_readoptions_t {
         self.0
     }
 }
