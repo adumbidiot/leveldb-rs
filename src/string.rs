@@ -4,26 +4,48 @@ use std::ffi::CStr;
 use std::os::raw::c_char;
 use std::str::Utf8Error;
 
+/// A LevelDB CString. Like regular CStrings, it is a byte-array.
 pub struct String(*mut c_char);
 
 impl String {
+    /// Make a String from a ptr.
+    ///
     /// # Safety
     /// The pointer must be a malloc-ed c string from the leveldb c api.
+    ///
+    /// # Panics
+    /// Panics if the ptr is null
+    ///
     pub unsafe fn from_ptr(ptr: *mut c_char) -> Self {
-        assert!(!ptr.is_null());
-        Self(ptr)
+        Self::try_from_ptr(ptr).expect("Non Null LevelDB CString Pointer")
     }
 
-    pub fn to_c_str(&self) -> &CStr {
+    /// Fallibly make a string from a ptr.
+    ///
+    /// # Safety
+    /// The pointer must be a malloc-ed c string from the leveldb c api.
+    ///
+    pub unsafe fn try_from_ptr(ptr: *mut c_char) -> Option<Self> {
+        if ptr.is_null() {
+            None
+        } else {
+            Some(Self(ptr))
+        }
+    }
+
+    /// Get the contents as a CStr.
+    pub fn as_c_str(&self) -> &CStr {
         unsafe { &CStr::from_ptr(self.0) }
     }
 
+    /// Try to convert this into a str.
     pub fn to_str(&self) -> Result<&str, Utf8Error> {
-        self.to_c_str().to_str()
+        self.as_c_str().to_str()
     }
 
+    /// Lossily convert this into a str.
     pub fn to_string_lossy(&self) -> Cow<str> {
-        self.to_c_str().to_string_lossy()
+        self.as_c_str().to_string_lossy()
     }
 }
 
@@ -37,12 +59,12 @@ impl Drop for String {
 
 impl std::fmt::Debug for String {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:#?}", self.to_string_lossy())
+        self.to_string_lossy().fmt(f)
     }
 }
 
 impl std::fmt::Display for String {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.to_string_lossy())
+        self.to_string_lossy().fmt(f)
     }
 }
