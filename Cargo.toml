@@ -1,12 +1,9 @@
 [package]
 name = "leveldb"
-version = "0.0.1"
+version = "0.0.0"
 authors = [ "adumbidiot <nathaniel.daniel23@outlook.com>" ]
 edition = "2018"
 license = "MIT"
 
 [dependencies]
-leveldb-sys = { path = "lib/leveldb-sys" }
-
-[workspace]
-members = [ "lib/leveldb-sys" ]
+leveldb-sys = "2.0.8"

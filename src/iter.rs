@@ -19,6 +19,8 @@ impl<'a> OwnedIterator<'a> {
         unsafe { leveldb_iter_valid(self.0) > 0 }
     }
 
+    /// Fairly certain this should be &mut. TODO: Fix upstream.
+    #[allow(clippy::unnecessary_mut_passed)]
     pub fn key(&self) -> Option<OwnedSlice> {
         let mut len = 0;
         unsafe {
@@ -34,6 +36,8 @@ impl<'a> OwnedIterator<'a> {
         }
     }
 
+    /// Fairly certain this should be &mut. TODO: Fix upstream.
+    #[allow(clippy::unnecessary_mut_passed)]
     pub fn value(&self) -> Option<OwnedSlice> {
         let mut len = 0;
         unsafe {
