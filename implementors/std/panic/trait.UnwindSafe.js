@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["leveldb"] = [{"text":"impl UnwindSafe for Db","synthetic":true,"types":[]},{"text":"impl&lt;'a&gt; UnwindSafe for OwnedIterator&lt;'a&gt;","synthetic":true,"types":[]},{"text":"impl UnwindSafe for Options","synthetic":true,"types":[]},{"text":"impl UnwindSafe for ReadOptions","synthetic":true,"types":[]},{"text":"impl UnwindSafe for OwnedSlice","synthetic":true,"types":[]},{"text":"impl UnwindSafe for String","synthetic":true,"types":[]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

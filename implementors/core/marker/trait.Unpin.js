@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["leveldb"] = [{"text":"impl Unpin for Db","synthetic":true,"types":[]},{"text":"impl&lt;'a&gt; Unpin for OwnedIterator&lt;'a&gt;","synthetic":true,"types":[]},{"text":"impl Unpin for Options","synthetic":true,"types":[]},{"text":"impl Unpin for ReadOptions","synthetic":true,"types":[]},{"text":"impl Unpin for OwnedSlice","synthetic":true,"types":[]},{"text":"impl Unpin for String","synthetic":true,"types":[]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["String","A LevelDB CString. Like regular CStrings, it is a byte-array."]]});
