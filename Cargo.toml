@@ -6,4 +6,4 @@ edition = "2018"
 license = "MIT"
 
 [dependencies]
-leveldb-sys = "2.0.8"
+leveldb-sys = "2.0.9"
