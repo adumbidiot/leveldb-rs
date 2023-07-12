@@ -5,7 +5,6 @@ use crate::options::Options;
 use crate::options::ReadOptions;
 use crate::string::String as LevelDbString;
 use std::ffi::CString;
-use std::os::raw::c_char;
 
 /// A Leveldb Database
 #[derive(Debug)]
@@ -45,20 +44,20 @@ impl Db {
         options: &ReadOptions,
         key: &[u8],
     ) -> Result<Option<LevelDbString>, LevelDbString> {
-        let mut value_size = 0;
+        let mut value_len = 0;
         let mut err_ptr = std::ptr::null_mut();
         let ptr = unsafe {
             leveldb_get(
                 self.ptr,
-                options.as_raw(),
-                key.as_ptr() as *const c_char,
+                options.0,
+                key.as_ptr().cast(),
                 key.len(),
-                &mut value_size,
+                &mut value_len,
                 &mut err_ptr,
             )
         };
 
-        let value = unsafe { LevelDbString::try_from_ptr(ptr) };
+        let value = unsafe { LevelDbString::try_from_ptr_len(ptr, value_len) };
         let err = unsafe { LevelDbString::try_from_ptr(err_ptr) };
 
         if let Some(err) = err {

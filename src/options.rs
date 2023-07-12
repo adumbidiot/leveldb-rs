@@ -2,7 +2,7 @@ use leveldb_sys::*;
 
 /// Leveldb Open options
 #[derive(Debug)]
-pub struct Options(*mut leveldb_options_t);
+pub struct Options(pub(crate) *mut leveldb_options_t);
 
 impl Options {
     /// Make a new options object
@@ -32,7 +32,7 @@ impl Default for Options {
 
 /// Options for reading keys
 #[derive(Debug)]
-pub struct ReadOptions(*mut leveldb_readoptions_t);
+pub struct ReadOptions(pub(crate) *mut leveldb_readoptions_t);
 
 impl ReadOptions {
     /// Make a new ReadOptions object
