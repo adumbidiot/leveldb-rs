@@ -62,5 +62,8 @@ jobs:
       - name: Build
         run: cargo build --verbose
         
+      - name: Build w/ Snappy feature
+        run: cargo build --verbose --features=snappy
+        
       # - name: Run tests # TODO: Figure out why libclang doesn't work
       #  run: cargo test --all --verbose
