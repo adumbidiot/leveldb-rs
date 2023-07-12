@@ -14,8 +14,7 @@ impl String {
     /// The pointer must be a malloc-ed c string from the leveldb c api.
     ///
     /// # Panics
-    /// Panics if the ptr is null
-    ///
+    /// Panics if the ptr is null.
     pub unsafe fn from_ptr(ptr: *mut c_char) -> Self {
         Self::try_from_ptr(ptr).expect("Non Null LevelDB CString Pointer")
     }
@@ -24,7 +23,6 @@ impl String {
     ///
     /// # Safety
     /// The pointer must be a malloc-ed c string from the leveldb c api.
-    ///
     pub unsafe fn try_from_ptr(ptr: *mut c_char) -> Option<Self> {
         if ptr.is_null() {
             None
@@ -33,9 +31,9 @@ impl String {
         }
     }
 
-    /// Get the contents as a CStr.
+    /// Get the contents as a `&CStr`.
     pub fn as_c_str(&self) -> &CStr {
-        unsafe { &CStr::from_ptr(self.0) }
+        unsafe { CStr::from_ptr(self.0) }
     }
 
     /// Try to convert this into a str.
