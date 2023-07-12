@@ -18,6 +18,7 @@ pub struct Db {
 
 impl Db {
     /// Open a leveldb database.
+    ///
     /// # Panics
     /// Panics if there is an interior NUL in the path.
     pub fn open(path: impl Into<Vec<u8>>, options: Options) -> Result<Self, LevelDbString> {
@@ -46,7 +47,7 @@ impl Db {
     ) -> Result<Option<LevelDbString>, LevelDbString> {
         let mut value_len = 0;
         let mut err_ptr = std::ptr::null_mut();
-        let ptr = unsafe {
+        let value_ptr = unsafe {
             leveldb_get(
                 self.ptr,
                 options.0,
@@ -57,7 +58,7 @@ impl Db {
             )
         };
 
-        let value = unsafe { LevelDbString::try_from_ptr_len(ptr, value_len) };
+        let value = unsafe { LevelDbString::try_from_ptr_len(value_ptr, value_len) };
         let err = unsafe { LevelDbString::try_from_ptr(err_ptr) };
 
         if let Some(err) = err {
