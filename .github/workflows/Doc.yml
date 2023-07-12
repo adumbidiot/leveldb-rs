@@ -1,4 +1,4 @@
-name: rustdoc
+name: Doc
 on:
   push:
    branches:
@@ -9,15 +9,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Install Rust toolchain
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        profile: minimal
-        override: true
-        components: rustfmt, rust-src
+      uses: actions/checkout@v3
 
     - name: Build Documentation
       run: cargo doc --all --no-deps

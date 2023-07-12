@@ -12,6 +12,8 @@ use std::os::raw::c_char;
 pub struct Db {
     ptr: *mut leveldb_t,
 
+    // TODO: Figure out why this is here
+    #[allow(dead_code)]
     options: Options,
 }
 
