@@ -1,68 +1,86 @@
+use leveldb_sys as sys;
 use std::borrow::Cow;
-use std::ffi::c_void;
 use std::ffi::CStr;
 use std::os::raw::c_char;
 use std::str::Utf8Error;
 
-/// A LevelDB CString. Like regular CStrings, it is a byte-array.
-pub struct String(*mut c_char);
+/// A LevelDB CString.
+///
+/// Like regular CStrings, it is a byte-array with no specified encoding.
+/// The length is also stored alongside the pointer, so this supports interior NULs.
+pub struct String {
+    ptr: *mut c_char,
+    len: usize,
+}
 
 impl String {
-    /// Make a String from a ptr.
+    /// Make a [`String`] from a ptr.
+    ///
+    /// This will use strlen to determine the string length.
     ///
     /// # Safety
-    /// The pointer must be a malloc-ed c string from the leveldb c api.
+    /// The pointer must be a malloc-ed C string from the leveldb C api.
     ///
     /// # Panics
     /// Panics if the ptr is null.
     pub unsafe fn from_ptr(ptr: *mut c_char) -> Self {
-        Self::try_from_ptr(ptr).expect("Non Null LevelDB CString Pointer")
+        Self::try_from_ptr(ptr).expect("ptr is null")
     }
 
+    /// Make a [`String`] from a ptr.
+    ///
     /// Fallibly make a string from a ptr.
     ///
     /// # Safety
-    /// The pointer must be a malloc-ed c string from the leveldb c api.
+    /// The pointer must be a malloc-ed C string from the leveldb C api.
     pub unsafe fn try_from_ptr(ptr: *mut c_char) -> Option<Self> {
         if ptr.is_null() {
             None
         } else {
-            Some(Self(ptr))
+            let len = unsafe { CStr::from_ptr(ptr).to_bytes().len() };
+            Some(Self { ptr, len })
         }
     }
 
-    /// Get the contents as a `&CStr`.
-    pub fn as_c_str(&self) -> &CStr {
-        unsafe { CStr::from_ptr(self.0) }
+    /// Make a [`String`] from a ptr and a len, fallibly.
+    ///
+    /// # Safety
+    /// * The pointer must be a malloc-ed C string from the leveldb C api.
+    /// * The length must be the length of the string, excluding the nul byte.
+    pub unsafe fn try_from_ptr_len(ptr: *mut c_char, len: usize) -> Option<Self> {
+        if ptr.is_null() {
+            None
+        } else {
+            Some(Self { ptr, len })
+        }
+    }
+
+    /// Get the contents as a byte slice.
+    pub fn as_bytes(&self) -> &[u8] {
+        unsafe { std::slice::from_raw_parts(self.ptr.cast(), self.len) }
     }
 
     /// Try to convert this into a str.
     pub fn to_str(&self) -> Result<&str, Utf8Error> {
-        self.as_c_str().to_str()
+        std::str::from_utf8(self.as_bytes())
     }
 
     /// Lossily convert this into a str.
     pub fn to_string_lossy(&self) -> Cow<str> {
-        self.as_c_str().to_string_lossy()
+        std::string::String::from_utf8_lossy(self.as_bytes())
     }
 }
 
 impl Drop for String {
     fn drop(&mut self) {
         unsafe {
-            leveldb_sys::leveldb_free(self.0 as *mut c_void);
+            sys::leveldb_free(self.ptr.cast());
         }
     }
 }
 
 impl std::fmt::Debug for String {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.to_string_lossy().fmt(f)
-    }
-}
-
-impl std::fmt::Display for String {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.to_string_lossy().fmt(f)
+        write!(f, "\"{}\"", self.as_bytes().escape_ascii())
     }
 }
