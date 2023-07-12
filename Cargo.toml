@@ -2,8 +2,13 @@
 name = "leveldb"
 version = "0.0.0"
 authors = [ "adumbidiot <nathaniel.daniel23@outlook.com>" ]
-edition = "2018"
-license = "MIT"
+edition = "2021"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
 leveldb-sys = "2.0.9"
+
+[features]
+snappy = [
+    "leveldb-sys/snappy",
+]
