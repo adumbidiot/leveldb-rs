@@ -54,12 +54,12 @@ impl String {
             Some(Self { ptr, len })
         }
     }
-    
+
     /// Get the len.
     pub fn len(&self) -> usize {
         self.len
     }
-    
+
     /// Check if this is empty.
     pub fn is_empty(&self) -> bool {
         self.len == 0
