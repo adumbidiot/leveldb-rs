@@ -3,6 +3,12 @@
 version = 3
 
 [[package]]
+name = "anyhow"
+version = "1.0.72"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3b13c32d80ecc7ab747b80c3784bce54ee8a7a0cc4fbda9bf4cda2cf6fe90854"
+
+[[package]]
 name = "cc"
 version = "1.0.79"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -34,6 +40,14 @@ name = "leveldb"
 version = "0.0.0"
 dependencies = [
  "leveldb-sys",
+]
+
+[[package]]
+name = "leveldb-cli"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "leveldb",
 ]
 
 [[package]]
