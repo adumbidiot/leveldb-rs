@@ -199,13 +199,13 @@ fn main() -> anyhow::Result<()> {
                             match type_byte {
                                 0 => {
                                     // TODO: Validate buffer len
-                                    let value: Vec<u16> = value[1..].chunks(2).map(|bytes| {
-                                        u16::from_ne_bytes(bytes.try_into().unwrap())
-                                    }).collect();
-                                    
+                                    let value: Vec<u16> = value[1..]
+                                        .chunks(2)
+                                        .map(|bytes| u16::from_ne_bytes(bytes.try_into().unwrap()))
+                                        .collect();
+
                                     // TODO: Handle invalid UTF16 somehow
-                                    let value =
-                                        String::from_utf16(&value).context("invalid utf16");
+                                    let value = String::from_utf16(&value).context("invalid utf16");
 
                                     match value {
                                         Ok(value) => {
@@ -231,7 +231,7 @@ fn main() -> anyhow::Result<()> {
                                 }
                                 _ => {
                                     println!("Value: Invalid type byte {type_byte}");
-                                } 
+                                }
                             }
                         }
                     }
