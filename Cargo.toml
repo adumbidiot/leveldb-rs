@@ -1,14 +1,5 @@
-[package]
-name = "leveldb"
-version = "0.0.0"
-authors = [ "adumbidiot <nathaniel.daniel23@outlook.com>" ]
-edition = "2021"
-license = "MIT OR Apache-2.0"
-
-[dependencies]
-leveldb-sys = "2.0.9"
-
-[features]
-snappy = [
-    "leveldb-sys/snappy",
+[workspace]
+resolver = "2"
+members = [
+    "leveldb",
 ]
