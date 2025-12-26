@@ -76,7 +76,7 @@ impl String {
     }
 
     /// Lossily convert this into a str.
-    pub fn to_string_lossy(&self) -> Cow<str> {
+    pub fn to_string_lossy(&self) -> Cow<'_, str> {
         std::string::String::from_utf8_lossy(self.as_bytes())
     }
 }

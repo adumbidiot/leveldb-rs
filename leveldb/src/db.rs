@@ -69,7 +69,7 @@ impl Db {
     }
 
     /// Iter all db keys
-    pub fn iter_owned(&mut self, options: &ReadOptions) -> OwnedIterator {
+    pub fn iter_owned(&mut self, options: &ReadOptions) -> OwnedIterator<'_> {
         unsafe {
             let ptr = leveldb_create_iterator(self.ptr, options.0);
             OwnedIterator::from_parts(ptr, self)
