@@ -6,7 +6,8 @@ edition = "2024"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-leveldb-sys = "2.0.9"
+# leveldb-sys = "2.0.9"
+leveldb-sys = { git = "https://github.com/SamWilsn/leveldb-sys", branch = "fixes" }
 
 [features]
 snappy = [
