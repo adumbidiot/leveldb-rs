@@ -1,11 +1,14 @@
+use anyhow::Context;
 use anyhow::bail;
 use anyhow::ensure;
-use anyhow::Context;
 use std::io::BufRead;
 use std::io::Write;
 
 #[derive(Debug)]
 pub enum Command {
+    /// Help
+    Help,
+
     /// Exit CLI
     Exit,
 
@@ -68,6 +71,10 @@ impl std::str::FromStr for Command {
         };
 
         match command {
+            "help" => {
+                ensure!(input.is_none(), "\".exit\" takes no arguments");
+                Ok(Self::Help)
+            }
             "exit" => {
                 ensure!(input.is_none(), "\".exit\" takes no arguments");
 
@@ -139,6 +146,15 @@ fn main() -> anyhow::Result<()> {
         };
 
         match command {
+            Command::Help => {
+                println!(".exit: Exit the program.");
+                println!(".open <path-to-database>: Open a database.");
+                println!(".list: List the entries in a database.");
+                println!(".keyformat <\"bytes\" or \"utf8\">: Change the key display format.");
+                println!(
+                    ".valueformat <\"bytes\" or \"chromelocalstorage\">: Change the value format."
+                );
+            }
             Command::Exit => {
                 println!("Goodbye!");
                 break;

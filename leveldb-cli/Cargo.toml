@@ -1,9 +1,9 @@
 [package]
 name = "leveldb-cli"
 version = "0.0.0"
-edition = "2021"
+edition = "2024"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-anyhow = "1.0.81"
+anyhow = "1.0.100"
 leveldb = { path = "../leveldb" }

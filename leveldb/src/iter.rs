@@ -1,7 +1,10 @@
 use crate::db::Db;
 use leveldb_sys as sys;
 
-pub struct OwnedIterator<'a>(*mut sys::leveldb_iterator_t, &'a Db);
+pub struct OwnedIterator<'a> {
+    ptr: *mut sys::leveldb_iterator_t,
+    _db: &'a Db,
+}
 
 impl<'a> OwnedIterator<'a> {
     ///# Safety
@@ -9,21 +12,23 @@ impl<'a> OwnedIterator<'a> {
     pub unsafe fn from_parts(ptr: *mut sys::leveldb_iterator_t, db: &'a Db) -> Self {
         assert!(!ptr.is_null());
 
-        sys::leveldb_iter_seek_to_first(ptr);
+        unsafe {
+            sys::leveldb_iter_seek_to_first(ptr);
+        }
 
-        Self(ptr, db)
+        Self { ptr, _db: db }
     }
 
     pub fn valid(&self) -> bool {
-        unsafe { sys::leveldb_iter_valid(self.0) > 0 }
+        unsafe { sys::leveldb_iter_valid(self.ptr) > 0 }
     }
 
     /// Fairly certain this should be &mut. TODO: Fix upstream.
-    #[allow(clippy::unnecessary_mut_passed)]
+    #[expect(clippy::unnecessary_mut_passed)]
     pub fn key(&self) -> Option<Vec<u8>> {
         let mut len = 0;
         unsafe {
-            let ptr = sys::leveldb_iter_key(self.0, &mut len);
+            let ptr = sys::leveldb_iter_key(self.ptr, &mut len);
             if !ptr.is_null() {
                 Some(std::slice::from_raw_parts(ptr.cast(), len).to_vec())
             } else {
@@ -37,7 +42,7 @@ impl<'a> OwnedIterator<'a> {
     pub fn value(&self) -> Option<Vec<u8>> {
         let mut len = 0;
         unsafe {
-            let ptr = sys::leveldb_iter_value(self.0, &mut len);
+            let ptr = sys::leveldb_iter_value(self.ptr, &mut len);
             if !ptr.is_null() {
                 Some(std::slice::from_raw_parts(ptr.cast(), len).to_vec())
             } else {
@@ -50,7 +55,7 @@ impl<'a> OwnedIterator<'a> {
 impl<'a> Drop for OwnedIterator<'a> {
     fn drop(&mut self) {
         unsafe {
-            sys::leveldb_iter_destroy(self.0);
+            sys::leveldb_iter_destroy(self.ptr);
         }
     }
 }
@@ -66,7 +71,7 @@ impl<'a> Iterator for OwnedIterator<'a> {
         let value = self.value()?;
 
         unsafe {
-            sys::leveldb_iter_next(self.0);
+            sys::leveldb_iter_next(self.ptr);
         }
 
         Some((key, value))

@@ -2,11 +2,12 @@
 name = "leveldb"
 version = "0.0.0"
 authors = [ "adumbidiot <nathaniel.daniel23@outlook.com>" ]
-edition = "2021"
+edition = "2024"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-leveldb-sys = "2.0.9"
+# leveldb-sys = "2.0.9"
+leveldb-sys = { git = "https://github.com/SamWilsn/leveldb-sys", branch = "fixes" }
 
 [features]
 snappy = [
