@@ -12,7 +12,9 @@ impl<'a> OwnedIterator<'a> {
     pub unsafe fn from_parts(ptr: *mut sys::leveldb_iterator_t, db: &'a Db) -> Self {
         assert!(!ptr.is_null());
 
-        sys::leveldb_iter_seek_to_first(ptr);
+        unsafe {
+            sys::leveldb_iter_seek_to_first(ptr);
+        }
 
         Self { ptr, _db: db }
     }
@@ -22,7 +24,7 @@ impl<'a> OwnedIterator<'a> {
     }
 
     /// Fairly certain this should be &mut. TODO: Fix upstream.
-    #[allow(clippy::unnecessary_mut_passed)]
+    #[expect(clippy::unnecessary_mut_passed)]
     pub fn key(&self) -> Option<Vec<u8>> {
         let mut len = 0;
         unsafe {

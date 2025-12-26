@@ -1,6 +1,6 @@
+use anyhow::Context;
 use anyhow::bail;
 use anyhow::ensure;
-use anyhow::Context;
 use std::io::BufRead;
 use std::io::Write;
 

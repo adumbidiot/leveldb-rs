@@ -24,7 +24,7 @@ impl String {
     /// # Panics
     /// Panics if the ptr is null.
     pub unsafe fn from_ptr(ptr: *mut c_char) -> Self {
-        Self::try_from_ptr(ptr).expect("ptr is null")
+        unsafe { Self::try_from_ptr(ptr).expect("ptr is null") }
     }
 
     /// Make a [`String`] from a ptr.
