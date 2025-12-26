@@ -1,0 +1,9 @@
+(function() {
+    var implementors = Object.fromEntries([["leveldb",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.92.0/core/ops/drop/trait.Drop.html\" title=\"trait core::ops::drop::Drop\">Drop</a> for <a class=\"struct\" href=\"leveldb/db/struct.Db.html\" title=\"struct leveldb::db::Db\">Db</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.92.0/core/ops/drop/trait.Drop.html\" title=\"trait core::ops::drop::Drop\">Drop</a> for <a class=\"struct\" href=\"leveldb/options/struct.Options.html\" title=\"struct leveldb::options::Options\">Options</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.92.0/core/ops/drop/trait.Drop.html\" title=\"trait core::ops::drop::Drop\">Drop</a> for <a class=\"struct\" href=\"leveldb/options/struct.ReadOptions.html\" title=\"struct leveldb::options::ReadOptions\">ReadOptions</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.92.0/core/ops/drop/trait.Drop.html\" title=\"trait core::ops::drop::Drop\">Drop</a> for <a class=\"struct\" href=\"leveldb/string/struct.String.html\" title=\"struct leveldb::string::String\">String</a>"],["impl&lt;'a&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/1.92.0/core/ops/drop/trait.Drop.html\" title=\"trait core::ops::drop::Drop\">Drop</a> for <a class=\"struct\" href=\"leveldb/iter/struct.OwnedIterator.html\" title=\"struct leveldb::iter::OwnedIterator\">OwnedIterator</a>&lt;'a&gt;"]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[1382]}
