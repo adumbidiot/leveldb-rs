@@ -1,5 +1,5 @@
 name: Build
-'on':
+"on":
   push:
     branches:
       - master
@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        
+
       - name: Cache
         uses: actions/cache@v3
         with:
@@ -24,30 +24,30 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ runner.os }}-cargo-lint-${{ hashFiles('**/Cargo.lock') }}
-      
+
       - name: Fmt
         run: cargo fmt -- --check --color always
-        
+
       - name: Clippy
         run: cargo clippy --tests -- -D warnings
-        
-  cargo-deny:
+
+  deny:
     name: Deny
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        
+
       - name: Deny
-        uses: EmbarkStudios/cargo-deny-action@v1
-        
+        uses: EmbarkStudios/cargo-deny-action@v2
+
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        
+
       - name: Cache
         uses: actions/cache@v3
         with:
@@ -58,12 +58,12 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
-        
+
       - name: Build
         run: cargo build --verbose
-        
+
       - name: Build w/ Snappy feature
         run: cargo build --verbose --features=snappy
-        
+
       # - name: Run tests # TODO: Figure out why libclang doesn't work
       #  run: cargo test --all --verbose
