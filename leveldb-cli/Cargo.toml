@@ -5,5 +5,5 @@ edition = "2024"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.102"
 leveldb = { path = "../leveldb" }
